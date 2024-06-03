@@ -1,22 +1,23 @@
 package com.galete.learnhub.api.category.mapper;
 
-import com.galete.learnhub.api.category.dto.requests.CategoryRequest;
+import com.galete.learnhub.api.category.dto.request.CategoryRequest;
 import com.galete.learnhub.api.category.dto.responses.CategoryResponse;
 import com.galete.learnhub.api.category.entity.Category;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
-@Mapper
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CategoryMapper {
 
-
-    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    Category categoryRequestToCategory(CategoryRequest request);
+    @Mapping(target = "updatedAt", ignore = true)
+    Category toEntity(CategoryRequest request);
 
 
-    CategoryResponse categoryToCategoryResponse(Category category);
+    CategoryResponse toDTO(Category category);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateCategoryRequestFromCategory(CategoryRequest categoryRequest, @MappingTarget Category category);
 
 }

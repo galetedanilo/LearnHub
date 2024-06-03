@@ -1,31 +1,25 @@
 package com.galete.learnhub.api.category.service;
 
+import com.galete.learnhub.api.category.dto.request.CategoryRequest;
 import com.galete.learnhub.api.category.entity.Category;
-import com.galete.learnhub.api.category.resouce.CategoryResource;
+import com.galete.learnhub.api.category.mapper.CategoryMapper;
+import com.galete.learnhub.api.category.resource.CategoryResource;
 import com.galete.learnhub.exception.ResourceNotFound;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryResource categoryResource;
+    private final CategoryMapper categoryMapper;
 
     public Category create(Category category) {
-
-        final LocalDateTime localDateTime = LocalDateTime.now();
-
-        category.setCreatedAt(localDateTime);
-        category.setUpdatedAt(localDateTime);
-
         return this.categoryResource.save(category);
-
     }
 
     public Category findById(Long id) {
@@ -40,17 +34,12 @@ public class CategoryService {
         return categoryResource.findAll(pageable);
     }
 
-    public Category update(Long id, Category category) {
-        Category updatedCategory = findById(id);
+    public Category update(Long id, CategoryRequest categoryRequest) {
+        Category category = findById(id);
 
-        updatedCategory.setName(category.getName());
-        updatedCategory.setDescription(category.getDescription());
-        updatedCategory.setActive(category.getActive());
-        updatedCategory.setUpdatedAt(LocalDateTime.now());
+        categoryMapper.updateCategoryRequestFromCategory(categoryRequest, category);
 
         return this.categoryResource.save(category);
-
-
     }
 
 
@@ -58,7 +47,6 @@ public class CategoryService {
         findById(id);
 
         categoryResource.deleteById(id);
-
     }
 
 }

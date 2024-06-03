@@ -1,24 +1,26 @@
-package com.galete.learnhub.api.category.entity;
+package com.galete.learnhub.api.subcategory.entity;
 
-import com.galete.learnhub.api.subcategory.entity.Subcategory;
+import com.galete.learnhub.api.category.entity.Category;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Data
 @Entity
-public class Category {
+@Data
+public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 1000)
+    @Column(length = 500)
     private String description;
+
+    @Column(nullable = false)
+    private Boolean active;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -26,12 +28,14 @@ public class Category {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
-    private Boolean active;
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 
     @PrePersist
     private void prePersist() {
         var temp = LocalDateTime.now();
+
         this.createdAt = temp;
         this.updatedAt = temp;
     }
@@ -40,4 +44,5 @@ public class Category {
     private void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
 }
