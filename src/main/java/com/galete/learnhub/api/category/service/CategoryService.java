@@ -3,7 +3,7 @@ package com.galete.learnhub.api.category.service;
 import com.galete.learnhub.api.category.dto.request.CategoryRequest;
 import com.galete.learnhub.api.category.entity.Category;
 import com.galete.learnhub.api.category.mapper.CategoryMapper;
-import com.galete.learnhub.api.category.resource.CategoryResource;
+import com.galete.learnhub.api.category.repository.CategoryRepository;
 import com.galete.learnhub.exception.ResourceNotFound;
 
 import lombok.RequiredArgsConstructor;
@@ -15,23 +15,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryResource categoryResource;
+    private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
     public Category create(Category category) {
-        return this.categoryResource.save(category);
+        return this.categoryRepository.save(category);
     }
 
     public Category findById(Long id) {
 
-        return this.categoryResource.findById(id)
+        return this.categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFound("Category with id: " + id + " is not found"));
 
     }
 
     public Page<Category> findAll(Pageable pageable) {
 
-        return categoryResource.findAll(pageable);
+        return categoryRepository.findAll(pageable);
     }
 
     public Category update(Long id, CategoryRequest categoryRequest) {
@@ -39,14 +39,12 @@ public class CategoryService {
 
         categoryMapper.updateCategoryRequestFromCategory(categoryRequest, category);
 
-        return this.categoryResource.save(category);
+        return this.categoryRepository.save(category);
     }
-
 
     public void remove(Long id) {
         findById(id);
 
-        categoryResource.deleteById(id);
+        categoryRepository.deleteById(id);
     }
-
 }

@@ -42,7 +42,7 @@ public class CategoryController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<CategoryResponse>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<CategoryResponse>> findAllCategories(Pageable pageable) {
         Page<Category> category = categoryService.findAll(pageable);
 
         Page<CategoryResponse> categoryResponses = category.map(categoryMapper::toDTO);
@@ -52,8 +52,6 @@ public class CategoryController {
 
     @PutMapping(path = "{id}")
     public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryRequest categoryRequest) {
-
-
         Category category = categoryService.update(id, categoryRequest);
 
         CategoryResponse categoryResponse = categoryMapper.toDTO(category);

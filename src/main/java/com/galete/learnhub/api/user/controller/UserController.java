@@ -8,6 +8,8 @@ import com.galete.learnhub.api.user.mapper.UserMapper;
 import com.galete.learnhub.api.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class UserController {
     public ResponseEntity<String> createAccount(@Valid @RequestBody UserCreateRequest userCreateRequest) {
         User user = userMapper.userCreateRequestToUser(userCreateRequest);
 
-        userService.register(user);
+        userService.create(user);
 
         return new ResponseEntity<>("Your account has been created successfully", HttpStatus.CREATED);
     }
@@ -36,6 +38,16 @@ public class UserController {
 
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity<Page<UserResponse>> findAllUsers(Pageable pageable) {
+        Page<User> userPage = userService.findAll(pageable);
+
+        Page<UserResponse> userResponsePage = userPage.map(userMapper::userToUserResponse);
+
+        return new ResponseEntity<>(userResponsePage, HttpStatus.OK);
+    }
+
 
     @GetMapping(path = "{id}")
     public ResponseEntity<UserResponse> findUserById(@PathVariable Long id) {

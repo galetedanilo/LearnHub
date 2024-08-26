@@ -9,13 +9,6 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "picture",  ignore = true)
-    @Mapping(target = "id",  ignore = true)
-    @Mapping(target = "enabled",  ignore = true)
-    @Mapping(target = "createdAt",  ignore = true)
-    User userRequestToUser(UserRequest userRequest);
-
     User userCreateRequestToUser(UserCreateRequest userCreateRequest);
 
     UserResponse userToUserResponse(User user);
